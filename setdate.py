@@ -1,9 +1,5 @@
-import subprocess
 import os
-from shutil import copyfile
-import traceback
 import datetime
-import PyPDF2
 import re
 from io import StringIO
 
@@ -15,7 +11,6 @@ from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfparser import PDFParser
 
 import dateutil.parser as dparser
-# we could remove some of the imports
 
 past_delta = 60
 future_delta = 1
