@@ -65,13 +65,13 @@ def check_with_regex(text):
     return dates
 
 
-def check_with_dparser(text):
+def check_with_dparser(text, fuzzy=False):
     dates = []
 
     for line in text.splitlines():
 
         try:
-            dates.append(dparser.parse(line, fuzzy=False, dayfirst=True))
+            dates.append(dparser.parse(line, fuzzy=fuzzy, dayfirst=True))
 
         except:
             continue
@@ -104,6 +104,10 @@ for file in all_pdfs:
         dates = check_with_regex(text)
 
     if len(dates) == 0:
+        print("WARNING: Still no date found, try dparser with fuzzy")
+        dates = check_with_regex(text, True)
+
+    if len(dates) == 0:
         print("ERROR: No date found at all")
         continue
 
@@ -114,16 +118,16 @@ for file in all_pdfs:
     # Plausicheck
 
     diff = datetime.datetime.now() - dates[0]
-    print("Difference to today: ")
-    print(diff)
+    print("Difference to today: " + str(diff))
 
     if diff > datetime.timedelta(days=past_delta) or diff < datetime.timedelta(days=future_delta):
         print("ERROR: Diff from Document date too high - Check manually")
         continue
 
     # rename the file
-    print("Rename")
-    os.rename(file, real_date + " " + file.replace('./', '') )
+    new_name = real_date + " " + file.replace('./', '')
+    print("Rename to '" + new_name + "'")
+    os.rename(file, new_name)
     print("------------------------------------------------------")
 
 print("Done")
