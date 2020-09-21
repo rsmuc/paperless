@@ -21,3 +21,7 @@ Verify all PDFs in the folder with veraPDF
 ## setdate.py
 
 Rename the PDF with the date from the content (e.g. Test.pdf --> 2020-09-05 Test.pdf)
+
+requires: pdfminer
+    
+    pip install pdfminer
