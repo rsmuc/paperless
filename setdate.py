@@ -74,6 +74,23 @@ def check_with_dparser(text, fuzzy=False):
     return dates
 
 
+def plausi_check(dates):
+    # we will use the first found date ... that should be correct usually
+    real_date = dates[0].strftime("%Y-%m-%d")
+    print("FOUND DATE: " + real_date)
+
+    # Plausicheck
+
+    diff = datetime.datetime.now() - dates[0]
+    print("Difference to today: " + str(diff))
+
+    if diff > datetime.timedelta(days=past_delta) or diff < datetime.timedelta(days=future_delta):
+        print("ERROR: Diff from Document date too high")
+        return None
+
+    else:
+        return real_date
+
 # traverse the folder and search for pdf files
 all_pdfs = get_all_pdfs()
 
@@ -93,30 +110,21 @@ for file in all_pdfs:
 
     dates = []
     dates = check_with_dparser(text)
+    real_date = plausi_check(dates)
 
-    if len(dates) == 0:
+
+    if not real_date:
         print("WARNING: No date found with dparser, try regex")
         dates = check_with_regex(text)
+        real_date = plausi_check(dates)
 
-    if len(dates) == 0:
+    if not real_date:
         print("WARNING: Still no date found, try dparser with fuzzy")
-        dates = check_with_regex(text, True)
+        dates = check_with_dparser(text, True)
+        real_date = plausi_check(dates)
 
-    if len(dates) == 0:
-        print("ERROR: No date found at all")
-        continue
-
-    # we will use the first found date ... that should be correct usually
-    real_date = dates[0].strftime("%Y-%m-%d")
-    print("FOUND DATE: " + real_date)
-
-    # Plausicheck
-
-    diff = datetime.datetime.now() - dates[0]
-    print("Difference to today: " + str(diff))
-
-    if diff > datetime.timedelta(days=past_delta) or diff < datetime.timedelta(days=future_delta):
-        print("ERROR: Diff from Document date too high - Check manually")
+    if not real_date:
+        print("ERROR: No date found at all - SET DATE MANUALLY")
         continue
 
     # rename the file

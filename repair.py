@@ -31,7 +31,7 @@ for file in all_pdfs:
         
     if "compliant=\"1\"" in str(result):
         print("OK")
-        
+
     else:
         print("DOCUMENT BROKEN")
         p = subprocess.Popen("docker run --rm -v $(pwd):/data -i jbarlow83/ocrmypdf --tesseract-timeout=0 --skip-text '/data/%s' '/data/%s'" % (file, file), shell=True, stdout=subprocess.PIPE,
