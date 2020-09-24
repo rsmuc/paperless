@@ -12,7 +12,7 @@ from pdfminer.pdfparser import PDFParser
 
 import dateutil.parser as dparser
 
-past_delta = 60
+past_delta = 30
 future_delta = 1
 
 def get_all_pdfs():
@@ -75,7 +75,6 @@ def check_with_dparser(text, fuzzy=False):
 
 
 def plausi_check(dates):
-    # we will use the first found date ... that should be correct usually
     real_date = dates[0].strftime("%Y-%m-%d")
     print("FOUND DATE: " + real_date)
 
@@ -89,6 +88,7 @@ def plausi_check(dates):
         return None
 
     else:
+        print("OK")
         return real_date
 
 # traverse the folder and search for pdf files
@@ -118,10 +118,10 @@ for file in all_pdfs:
         dates = check_with_regex(text)
         real_date = plausi_check(dates)
 
-    if not real_date:
-        print("WARNING: Still no date found, try dparser with fuzzy")
-        dates = check_with_dparser(text, True)
-        real_date = plausi_check(dates)
+    #if not real_date:
+    #    print("WARNING: Still no date found, try dparser with fuzzy")
+    #    dates = check_with_dparser(text, True)
+    #    real_date = plausi_check(dates)
 
     if not real_date:
         print("ERROR: No date found at all - SET DATE MANUALLY")
