@@ -75,6 +75,9 @@ def check_with_dparser(text, fuzzy=False):
 
 
 def plausi_check(dates):
+    if len(dates) == 0:
+        return None
+    
     real_date = dates[0].strftime("%Y-%m-%d")
     print("FOUND DATE: " + real_date)
 
